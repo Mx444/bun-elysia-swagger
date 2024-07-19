@@ -28,6 +28,7 @@ Per installare e configurare il progetto, segui questi passaggi:
    ```
 
 3. **Installa le dipendenze usando Bun**
+
    ```bash
    bun install
    ```
@@ -43,6 +44,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/mydatabase"
 Esegui le migrazioni Prisma:
 
 1. **Esegui le migrazioni Prisma**
+
    ```bash
    bun prisma migrate dev
    ```
@@ -95,7 +97,7 @@ Questo progetto è licenziato sotto la licenza MIT - vedi il file [LICENSE](LICE
 
 ---
 
-### Note:
+### Note
 
 1. **Installazione**:
 
