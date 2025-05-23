@@ -1,123 +1,132 @@
-# Elysia Prisma Swagger Project
+# Bun-Elysia-Swagger API
 
-Questo progetto utilizza [Elysia](https://elysiajs.com) come framework web, [Prisma](https://www.prisma.io) come ORM, [Swagger](https://swagger.io) per la documentazione delle API e [Bun](https://bun.sh) come runtime JavaScript/TypeScript.
+This repository contains a RESTful API built with Bun, Elysia, and Prisma. It serves as a demonstration of how to integrate these technologies to create a modern, type-safe backend application.
 
-## Sommario
+## Technologies Used
 
-- [Installazione](#installazione)
-- [Configurazione del Database](#configurazione-del-database)
-- [Uso](#uso)
-- [Contribuire](#contribuire)
-- [Licenza](#licenza)
-- [Ringraziamenti](#ringraziamenti)
+- **[Bun](https://bun.sh/)**: A fast JavaScript runtime, package manager, and bundler
+- **[Elysia](https://elysiajs.com/)**: A TypeScript framework for building web applications
+- **[Prisma](https://www.prisma.io/)**: Next-generation ORM for Node.js and TypeScript
+- **[Swagger](https://swagger.io/)**: API documentation tool via @elysiajs/swagger
 
-## Installazione
+## Project Structure
 
-Per installare e configurare il progetto, segui questi passaggi:
+```
+bun-elysia-swagger/
+├── prisma/
+│   └── schema.prisma    # Database schema definition
+├── src/
+│   └── server.ts        # Main server application
+├── .gitignore
+├── bun.lockb
+├── package.json
+├── README.md
+└── tsconfig.json
+```
 
-1. **Clona il repository**
+## Features
 
+- RESTful API endpoints for user management
+- Swagger documentation for API exploration
+- PostgreSQL database integration via Prisma
+- Type-safe API development with TypeScript
+
+## API Endpoints
+
+| Method | Endpoint    | Description                 | Request Body                                | Response                      |
+|--------|-------------|-----------------------------|---------------------------------------------|-------------------------------|
+| GET    | /           | Hello world endpoint        | -                                           | "Hello Elysia"                |
+| GET    | /user       | Get all users               | -                                           | Array of user objects         |
+| GET    | /user/:id   | Get user by ID              | -                                           | User object or error message  |
+| POST   | /user       | Create a new user           | `{ name: string, email: string }`           | Success or error message      |
+
+## Database Schema
+
+The application uses a PostgreSQL database with the following schema:
+
+```prisma
+model User {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String  @unique
+}
+```
+
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) installed on your machine
+- PostgreSQL database
+
+### Installation
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/tuo-username/tuo-progetto.git
+   git clone <repository-url>
+   cd bun-elysia-swagger
    ```
 
-2. **Entra nella directory del progetto**
-
-   ```bash
-   cd tuo-progetto
-   ```
-
-3. **Installa le dipendenze usando Bun**
-
+2. Install dependencies:
    ```bash
    bun install
    ```
 
-## Configurazione del Database
-
-Prima di eseguire le migrazioni, assicurati di avere un file `.env` nella root del progetto con la configurazione della connessione al database. Esempio di file `.env`:
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/mydatabase"
-```
-
-Esegui le migrazioni Prisma:
-
-1. **Esegui le migrazioni Prisma**
-
-   ```bash
-   bun prisma migrate dev
+3. Set up your environment variables:
+   Create a `.env` file in the root directory with the following content:
+   ```
+   DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
    ```
 
-## Uso
+4. Run database migrations:
+   ```bash
+   bunx prisma migrate dev --name init
+   ```
 
-L'applicazione avvia un server sulla porta 3000. Puoi accedere ai seguenti endpoint:
+5. Start the server:
+   ```bash
+   bun run src/server.ts
+   ```
 
-- `GET /`: Endpoint di benvenuto.
-- `GET /user`: Ottieni la lista di tutti gli utenti.
-- `GET /user/:id`: Ottieni i dettagli di un utente specifico tramite ID.
-- `POST /user`: Crea un nuovo utente.
+6. Access the API documentation:
+   Open your browser and navigate to `http://localhost:3000/docs`
 
-### Esempio di Richiesta
+## Development
 
-**POST /user**
+### Adding New Endpoints
 
-```bash
-curl -X POST http://localhost:3000/user \
--H "Content-Type: application/json" \
--d '{"name": "John Doe", "email": "johndoe@example.com"}'
+To add new endpoints, follow the pattern in `server.ts`. Elysia uses a chainable API for defining routes:
+
+```typescript
+app.group("", { detail: { tags: ["YourTag"] } }, (app) =>
+  app.get("/your-endpoint", async ({ set }) => {
+    // Your handler logic here
+  })
+);
 ```
 
-## Documentazione delle API
+### Database Operations
 
-La documentazione delle API è disponibile all'indirizzo [http://localhost:3000/docs](http://localhost:3000/docs) grazie a Swagger.
+The project uses Prisma Client for database operations. Example:
 
-## Contribuire
+```typescript
+// Create a new record
+await prisma.user.create({ data: { name: "John", email: "john@example.com" } });
 
-Se desideri contribuire al progetto, segui questi passaggi:
+// Query records
+const users = await prisma.user.findMany();
+```
 
-1. Fai un fork del progetto
-2. Crea un branch per la tua feature (`git checkout -b feature/nome-feature`)
-3. Esegui i test (`bun test`)
-4. Committa le tue modifiche (`git commit -am 'Aggiungi una nuova feature'`)
-5. Push del branch (`git push origin feature/nome-feature`)
-6. Apri una pull request
+## API Documentation
 
-## Licenza
+The API documentation is automatically generated using Swagger and is available at `/docs` when the server is running.
 
-Questo progetto è licenziato sotto la licenza MIT - vedi il file [LICENSE](LICENSE) per i dettagli.
+## License
 
-## Ringraziamenti
+This project is open source and available under the [MIT License](LICENSE).
 
-- [Elysia](https://elysiajs.com) per il framework web.
-- [Prisma](https://www.prisma.io) per l'ORM.
-- [Swagger](https://swagger.io) per la documentazione delle API.
-- [Bun](https://bun.sh) per il runtime JavaScript/TypeScript.
-- [Altri progetti open-source](https://github.com/)
+## Acknowledgements
 
----
-
-### Note
-
-1. **Installazione**:
-
-   - Fornisce i dettagli su come clonare il repository e installare le dipendenze usando Bun.
-
-2. **Configurazione del Database**:
-
-   - Spiega come impostare il file `.env` per la configurazione del database e come eseguire le migrazioni Prisma.
-
-3. **Uso**:
-
-   - Spiega come utilizzare il progetto, con esempi di richieste e l'indirizzo della documentazione Swagger.
-
-4. **Contribuire**:
-
-   - Fornisce linee guida su come contribuire al progetto, creando un ambiente invitante per i contributori.
-
-5. **Licenza**:
-
-   - Specifica la licenza del progetto.
-
-6. **Ringraziamenti**:
-   - Menziona chi ha contribuito al progetto e le risorse utilizzate.
+- [Elysia Documentation](https://elysiajs.com/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Bun Documentation](https://bun.sh/docs)
